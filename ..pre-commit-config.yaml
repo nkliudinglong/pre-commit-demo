@@ -1,0 +1,10 @@
+default_stages: [push]
+repos:
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: Run Pytest
+        entry: pytest test
+        language: system
+        pass_filenames: false
+        always_run: true
