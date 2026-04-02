@@ -1,10 +1,5 @@
 default_stages: [push]
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0 # 使用的版本号
-    hooks:
-      - id: trailing-whitespace   # 自动删除行尾多余的空格
-      - id: end-of-file-fixer     # 确保文件以一个空行结尾
   - repo: local
     hooks:
       - id: pytest-check
