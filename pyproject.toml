@@ -1,0 +1,60 @@
+[tool.ruff]
+# --- Corresponds to [MAIN] and [FORMAT] ---
+target-version = "py311"          # Maps to py-version=3.11
+line-length = 100                 # Maps to max-line-length=100
+indent-width = 4                  # Maps to indent-string='    '
+show-fixes = true                 # Maps to suggestion-mode=yes
+
+[tool.ruff.lint]
+# --- Core rule sets mapping ---
+select = [
+    "E", "W",   # pycodestyle: PEP 8 fundamentals
+    "F",        # pyflakes: Syntax and logic errors
+    "I",        # isort: Corresponds to [IMPORTS] module sorting
+    "PL",       # pylint: Enables Pylint rules (C/E/R/W categories)
+    "N",        # pep8-naming: Corresponds to [BASIC] naming styles
+    "C90",      # mccabe: Corresponds to [DESIGN] complexity checks
+    "B",        # flake8-bugbear: Finds common bugs and design issues
+    "BLE",      # flake8-blind-except: Maps to [EXCEPTIONS] overgeneral-exceptions
+    "A",        # flake8-builtins: Maps to [VARIABLES] redefined builtins
+    "G",        # flake8-logging-format: Maps to [LOGGING] format checks
+    "S",        # flake8-bandit: Security checks (e.g., requests timeout in [METHOD_ARGS])
+    "FIX",      # flake8-fixme: Maps to [MISCELLANEOUS] note tags
+    "RUF",      # Ruff-specific advanced engineering rules
+]
+
+ignore = [
+    "E501",     # Ignored here; line length is handled by the formatter instead
+    "PLR0801",  # Maps to [SIMILARITIES]: Ignored because Ruff does not skip comments yet
+]
+
+# --- Corresponds to [MISCELLANEOUS] ---
+task-tags = ["TODO", "FIXME", "XXX"]
+
+# --- Corresponds to [VARIABLES] ---
+dummy-variable-rgx = "^(_+|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_)$"
+
+[tool.ruff.lint.pylint]
+# --- Corresponds to [DESIGN] thresholds ---
+max-args = 5                 # Maps to max-args=5
+max-branches = 12            # Maps to max-branches=12
+max-returns = 6              # Maps to max-returns=6
+max-statements = 50          # Maps to max-statements=50
+max-locals = 15              # Maps to max-locals=15
+max-public-methods = 20      # Maps to max-public-methods=20
+max-bool-expr = 5            # Maps to max-bool-expr=5
+
+[tool.ruff.lint.isort]
+# --- Corresponds to [IMPORTS] ---
+combine-as-imports = true
+known-third-party = ["enchant"]
+
+[tool.ruff.lint.flake8-builtins]
+# --- Corresponds to [VARIABLES] allowed-redefined-builtins ---
+builtins-ignorelist = []     # Strict mode: no shadowing of Python built-ins allowed
+
+[tool.ruff.format]
+# --- Corresponds to [FORMAT] ---
+indent-style = "space"       # Maps to indent-string='    '
+quote-style = "double"       # Enforces consistent double quotes
+line-ending = "auto"         # Maps to expected-line-ending-format
