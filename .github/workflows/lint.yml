@@ -1,4 +1,4 @@
-name: Static Analysis
+name: Static Analysis (Incremental)
 
 on:
   push:
@@ -12,7 +12,11 @@ jobs:
 
     steps:
       - name: Checkout code
+        # fetch-depth: 0 is required to fetch all history for all branches and tags, 
+        # allowing the action to compare commits and find changed files.
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -20,18 +24,36 @@ jobs:
           python-version: '3.10'
 
       - name: Install Linting Tools
+        run: pip install ruff pre-commit
+
+      # 1. Get all Python files modified in this commit/PR
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **.py
+
+      # 2. Run Ruff Linter ONLY on changed Python files
+      - name: Run Ruff Linter on changed files
+        # Run only if there are Python files modified to prevent Ruff from failing on an empty file list
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          pip install ruff pre-commit
+          ruff check ${{ steps.changed-files.outputs.all_changed_files }}
 
-      - name: Run Ruff Linter
+      # 3. Run Ruff Format ONLY on changed Python files
+      - name: Run Ruff Format on changed files
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          ruff check . \
-            --preview \
-            --select "E3,E,F,W,I,W291" \
-            --ignore "E501"
+          ruff format --check ${{ steps.changed-files.outputs.all_changed_files }}
 
-      - name: Run Ruff Format Check
-        run: ruff format . --check --preview
+      # 4. Get all changed files regardless of extension (prepared for the EOF fixer)
+      - name: Get all changed files
+        id: all-changed-files
+        uses: tj-actions/changed-files@v44
 
-      - name: Run End of File Fixer Check
-        run: pre-commit run end-of-file-fixer --all-files
+      # 5. Run End of File Fixer ONLY on changed files
+      - name: Run End of File Fixer
+        if: steps.all-changed-files.outputs.any_changed == 'true'
+        run: |
+          pre-commit run end-of-file-fixer --files ${{ steps.all-changed-files.outputs.all_changed_files }}
