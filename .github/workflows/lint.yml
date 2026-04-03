@@ -24,7 +24,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install Linting Tools
-        run: pip install ruff pre-commit
+        run: pip install ruff pre-commit pre-commit-hooks
 
       # 1. Get all Python files modified in this commit/PR
       - name: Get changed files
