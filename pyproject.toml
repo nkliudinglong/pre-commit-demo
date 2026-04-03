@@ -25,7 +25,6 @@ select = [
 
 ignore = [
     "E501",     # Ignored here; line length is handled by the formatter instead
-    "PLR0801",  # Maps to [SIMILARITIES]: Ignored because Ruff does not skip comments yet
 ]
 
 # --- Corresponds to [MISCELLANEOUS] ---
