@@ -1,10 +1,41 @@
-default_stages: [pre-push]
 repos:
+  # --- 1. Local Ruff Hooks ---
+  - repo: local
+    hooks:
+      - id: ruff-linter
+        name: ruff-linter
+        entry: ruff check
+        language: system
+        types_or: [python, pyi]
+        args: [--preview, --select, "E3,E,F,W,I,W291", --ignore, "E501"]
+        stages: [pre-commit]
+
+      - id: ruff-format
+        name: ruff-format-check
+        entry: ruff format
+        language: system
+        types_or: [python, pyi]
+        args: [--check, --preview]
+        stages: [pre-commit]
+
+  # --- 2. End of File Fixer (改为 Local) ---
+  - repo: local
+    hooks:
+      - id: end-of-file-fixer
+        name: end-of-file-fixer
+        # 直接调用 pre-commit 内置的脚本（需要确保环境中有 pre-commit）
+        entry: end-of-file-fixer
+        language: python
+        types: [text]
+        stages: [pre-commit]
+
+  # --- 3. Local Test Suite ---
   - repo: local
     hooks:
       - id: pytest-check
-        name: Run Pytest
-        entry: pytest test
+        name: run-pytest
+        entry: pytest test/
         language: system
         pass_filenames: false
         always_run: true
+        stages: [pre-push]
