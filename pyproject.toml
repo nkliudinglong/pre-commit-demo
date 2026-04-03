@@ -1,59 +1,61 @@
 [tool.ruff]
-# --- Corresponds to [MAIN] and [FORMAT] ---
-target-version = "py311"          # Maps to py-version=3.11
-line-length = 100                 # Maps to max-line-length=100
-indent-width = 4                  # Maps to indent-string='    '
-show-fixes = true                 # Maps to suggestion-mode=yes
+# --- Global Settings ---
+target-version = "py313"          # Assumes Python 3.13 syntax and features for parsing and linting
+line-length = 100                 # Sets the maximum allowed characters per line to 100
+indent-width = 4                  # Specifies the number of spaces per indentation level
+show-fixes = true                 # Displays suggested automated fixes in the terminal output
 
 [tool.ruff.lint]
-# --- Core rule sets mapping ---
+# --- Enabled Rule Sets ---
 select = [
-    "E", "W",   # pycodestyle: PEP 8 fundamentals
-    "F",        # pyflakes: Syntax and logic errors
-    "I",        # isort: Corresponds to [IMPORTS] module sorting
-    "PL",       # pylint: Enables Pylint rules (C/E/R/W categories)
-    "N",        # pep8-naming: Corresponds to [BASIC] naming styles
-    "C90",      # mccabe: Corresponds to [DESIGN] complexity checks
-    "B",        # flake8-bugbear: Finds common bugs and design issues
-    "BLE",      # flake8-blind-except: Maps to [EXCEPTIONS] overgeneral-exceptions
-    "A",        # flake8-builtins: Maps to [VARIABLES] redefined builtins
-    "G",        # flake8-logging-format: Maps to [LOGGING] format checks
-    "S",        # flake8-bandit: Security checks (e.g., requests timeout in [METHOD_ARGS])
-    "FIX",      # flake8-fixme: Maps to [MISCELLANEOUS] note tags
-    "RUF",      # Ruff-specific advanced engineering rules
+    "E", "W",   # pycodestyle: Enforces basic PEP 8 styling and formatting conventions
+    "F",        # pyflakes: Detects syntax errors, undefined names, and unused imports
+    "I",        # isort: Automatically sorts and categorizes import statements
+    "PL",       # pylint: Enables comprehensive static analysis rules for code quality
+    "N",        # pep8-naming: Enforces consistent naming conventions for variables, classes, and functions
+    "C90",      # mccabe: Measures and limits cyclomatic complexity (too many if/else branches)
+    "B",        # flake8-bugbear: Identifies common bugs and design flaws missed by standard linters
+    "BLE",      # flake8-blind-except: Prevents catching broad exceptions like 'except Exception:'
+    "A",        # flake8-builtins: Prevents variables or arguments from shadowing Python built-ins (e.g., 'list', 'id')
+    "G",        # flake8-logging-format: Validates that logging statements use optimal string formatting
+    "S",        # flake8-bandit: Performs security checks to find potential vulnerabilities
+    "FIX",      # flake8-fixme: Detects temporary developer notes left in the code
+    "RUF",      # ruff: Enables Ruff's exclusive, advanced engineering and performance rules
 ]
 
+# --- Disabled Rules ---
 ignore = [
-    "E501",     # Ignored here; line length is handled by the formatter instead
+    "E501",     # Disables line-length warnings in the linter (this is handled by the Ruff formatter instead)
 ]
 
-# --- Corresponds to [MISCELLANEOUS] ---
-task-tags = ["TODO", "FIXME", "XXX"]
+# --- Note Tag Configuration ---
+task-tags = ["TODO", "FIXME", "XXX"] # Defines strings that flag unresolved tasks or issues in comments
 
-# --- Corresponds to [VARIABLES] ---
+# --- Variable Configuration ---
+# Regular expression to identify dummy/unused variables so they don't trigger "unused variable" warnings
 dummy-variable-rgx = "^(_+|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_)$"
 
 [tool.ruff.lint.pylint]
-# --- Corresponds to [DESIGN] thresholds ---
-max-args = 5                 # Maps to max-args=5
-max-branches = 12            # Maps to max-branches=12
-max-returns = 6              # Maps to max-returns=6
-max-statements = 50          # Maps to max-statements=50
-max-locals = 15              # Maps to max-locals=15
-max-public-methods = 20      # Maps to max-public-methods=20
-max-bool-expr = 5            # Maps to max-bool-expr=5
+# --- Code Complexity and Design Thresholds ---
+max-args = 5                 # Restricts functions or methods to a maximum of 5 arguments
+max-branches = 12            # Limits the number of execution branches (if/elif/else) per function to 12
+max-returns = 6              # Restricts the number of return statements within a single function to 6
+max-statements = 50          # Limits the total number of statements in a single function to 50
+max-locals = 15              # Restricts the number of local variables allowed within a function to 15
+max-public-methods = 20      # Limits classes to a maximum of 20 public methods to prevent monolithic design
+max-bool-expr = 5            # Limits the number of boolean expressions inside a single if-statement to 5
 
 [tool.ruff.lint.isort]
-# --- Corresponds to [IMPORTS] ---
-combine-as-imports = true
-known-third-party = ["enchant"]
+# --- Import Sorting Configuration ---
+combine-as-imports = true    # Combines multiple imports from the same module onto a single line (e.g., from x import a, b)
+known-third-party = ["enchant"] # Explicitly categorizes specified modules as third-party packages
 
 [tool.ruff.lint.flake8-builtins]
-# --- Corresponds to [VARIABLES] allowed-redefined-builtins ---
-builtins-ignorelist = []     # Strict mode: no shadowing of Python built-ins allowed
+# --- Built-in Shadowing Configuration ---
+builtins-ignorelist = []     # Keeps strict mode enabled: no Python built-in names can be overridden
 
 [tool.ruff.format]
-# --- Corresponds to [FORMAT] ---
-indent-style = "space"       # Maps to indent-string='    '
-quote-style = "double"       # Enforces consistent double quotes
-line-ending = "auto"         # Maps to expected-line-ending-format
+# --- Code Formatter Configuration ---
+indent-style = "space"       # Uses spaces instead of tabs for indentation
+quote-style = "double"       # Enforces the consistent use of double quotes for all strings
+line-ending = "auto"         # Automatically detects and applies the appropriate line endings (CRLF/LF) based on the OS
