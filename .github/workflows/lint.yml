@@ -1,0 +1,38 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip' # 缓存依赖，加快后续运行速度
+
+      - name: Install Linting Tools
+        run: |
+          pip install ruff pre-commit
+
+      - name: Run Ruff Linter
+        run: |
+          ruff check . \
+            --preview \
+            --select "E3,E,F,W,I,W291" \
+            --ignore "E501"
+
+      - name: Run Ruff Format Check
+        run: ruff format . --check --preview
+
+      - name: Run End of File Fixer Check
+        run: pre-commit run end-of-file-fixer --all-files
